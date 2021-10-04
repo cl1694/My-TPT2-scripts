@@ -1,0 +1,54 @@
+:name translate
+:import constants
+:local int c
+:local int m
+:local int r
+
+#mbase 10
+
+b2c:
+waituntil(p1==len(chaos)||p2<len(code))
+gotoif(end,p1==len(chaos)&&p2==len(code))
+c=2*if(c==0||{iscode(c)}||c>=32,1,c)+index("10",sub(code,p2,1),0)
+p2+=1
+
+#labelnumber if(r<0,b2c,if(r==0,int,double))
+
+goto(if({iscode(c)},\
+if({isaction(c)},action, \
+if({isspecial(c)},special,{labelnumber})),\
+b2c))
+
+#ppos m/{mbase}
+#vpos m%{mbase}
+
+action:
+m=({ppos}+1)*{mbase}
+r= -1
+{setcmd({ppos},1+{codeid({actions},c)})}
+goto(b2c)
+
+special:
+m+=1
+r={codeid({special},c)}
+goto(b2c)
+
+;number:
+#value {codeid({numbers},c)}
+
+int:
+{setvarint({ppos},{vpos},\
+if({value}<8,\
+{varint({ppos},{vpos})}*8+{value},\
+-1*{varint({ppos},{vpos})}\
+))}
+goto(b2c)
+
+double:
+{setvardouble({ppos},{vpos},\
+({vardouble({ppos},{vpos})}+i2d({value}))/8.0)}
+goto(b2c)
+
+
+
+end:wait(0.0)

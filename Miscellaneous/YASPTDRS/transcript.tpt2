@@ -1,0 +1,21 @@
+:name transcript
+:import constants
+:local int c
+
+p1=start_pos
+execute("translate")
+s2b2:
+c={indexmain(sub(chaos,p1,1))} ;0-63
+code=code . c/32%2 . c/16%2 . c/8%2 . c/4%2 . c/2%2 . c%2
+p1+=1
+gotoif(if(p1<len(chaos),s2b2,end),len(chaos)<max_code)
+waitwhile(p2<len(code))
+p0+=len(code)
+code=""
+p2=0
+gotoif(s2b2,p1<len(chaos))
+end:waituntil(gig("p")>0)
+gss({display},"working")
+gu("chaos")
+gu("code")
+wait(0.0)

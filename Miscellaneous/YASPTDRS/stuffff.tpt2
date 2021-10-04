@@ -1,0 +1,57 @@
+:name stuffff
+:import constants
+:global int p
+
+wait(0.0)
+goto(2+{cmd(p)})
+
+; basic stuff
+
+;1 click rel coords(double x , double y)
+clickrel({d1},{d2})
+
+;2 goto times(int goal, int limit , int current=auto)
+p=if({i3}>0,{i1}- 1,p)
+
+;3 wait(double base, int pow) ; base*8^pow
+; it's not here apparently, it is done in the main script
+wait(0.0); we don't want to mess up with line id
+
+;4 open window(int window,int open)
+show({id2b({i1})},{i2}>0)
+
+;5 scroll(double x,double y,double goalx, double goaly)
+; why there's no scrollrel
+scrollbar(vec({d1}*width.d(),{d2}*height.d()),{d3},{d4})
+
+;buildings
+
+;6 restart tower testing()
+restart()
+
+;7 switch tabs in mine(int tab)
+tab({i1})
+
+;8 storage free slots as tmp(int inv)
+gis({tmpvarname},freeSlots({id2m({i1})}))
+
+;9 move powerstone(int from, int slot, int to, int usetmp)
+move({id2m({i1})},{i2}+{i4}*gig({tmpvarname}),{id2m({i3})})
+
+;10 delete powerstone(int inv,int slot,int usetmp)
+delete({id2m({i1})},{i2}+{i3}*gig({tmpvarname}))
+
+;11 unused, hotkey k
+wait(0.0)
+
+;12 unused, hotkey l
+wait(0.0)
+
+;13 unused, kotkey o
+wait(0.0)
+
+;14 unused, hotkey +
+wait(0.0)
+
+;end
+wait(0.0)

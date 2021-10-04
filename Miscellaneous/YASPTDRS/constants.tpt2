@@ -1,0 +1,88 @@
+:name constants
+:global string chaos
+:global string code
+:global int p1
+:global int p2
+:global int p0
+:const int start_pos 64
+:const int max_code 1000
+#indexmain(a) index(chaos,{a},0)
+#codestr "abcdefghijklo+012345678:/"
+#actions "abcdefghijklo+"
+#numbers "012345678"
+#special ":/"
+#codeid(from,a) index({from},sub(chaos,{a},1),0)
+#iscode(a) ({codeid({codestr},{a})}>=0)
+#isnotcode(a) ({codeid({codestr},{a})}<0)
+#isaction(a) ({codeid({actions},{a})}>=0)
+#isnumber(a) ({codeid({numbers},{a})}>=0)
+#isspecial(a) ({codeid({special},{a})}>=0)
+
+; these things should be done in main script
+#idgoto 2
+#idwait 3
+
+#tmpvarname "tempforstuffff"
+#cmd(a) (gig("xf".({a})))
+#varint(a,x) (gig(({x})."vi".({a})))
+#vardouble(a,x) (gdg(({x})."vd".({a})))
+#setcmd(a,w) (gis("xf".({a}),({w})))
+#setvarint(a,x,w) (gis(({x})."vi".({a}),({w})))
+#setvardouble(a,x,w) (gds(({x})."vd".({a}),({w})))
+
+;quick access
+#i1 {varint(p,"1")}
+#i2 {varint(p,"2")}
+#i3 {varint(p,"3")}
+#i4 {varint(p,"4")}
+#d1 {vardouble(p,"1")}
+#d2 {vardouble(p,"2")}
+#d3 {vardouble(p,"3")}
+#d4 {vardouble(p,"4")}
+
+#display "<size=20><color=white>rickrolling"
+#tsps 10000000.0
+
+#buildingname "\
+towertesting-----\
+powerplant-------\
+mine-------------\
+factory----------\
+headquarters-----\
+arcade-----------\
+laboratory-------\
+shipyard---------\
+tradingpost------\
+workshop---------\
+museum-----------\
+constructionfirm-\
+statueofcubos----"
+
+#id2b(a) sub({buildingname},17*({a}- 1),index({buildingname},"-",17*({a}- 1))- 17*({a}- 1))
+
+;1  towertesting
+;2  powerplant
+;3  mine
+;4  factory
+;5  headquarters
+;6  arcade
+;7  laboratory
+;8  shipyard
+;9  tradingpost
+;10 workshop
+;11 museum
+;12 constructionfirm
+;13 statueofcubos
+
+#museumname "\
+inventory--\
+equipped---\
+combinator-\
+cuboscube--"
+
+#id2m(a) sub({museumname},11*({a}- 1),index({museumname},"-",11*({a}- 1))- 11*({a}- 1))
+
+;1 inventory
+;2 equipped
+;3 combinator
+;4 cuboscube
