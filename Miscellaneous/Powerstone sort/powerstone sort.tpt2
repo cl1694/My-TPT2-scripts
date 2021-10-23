@@ -1,0 +1,38 @@
+:name powerstone sort
+:import sort constant
+:global int turbo.cycles
+:global int turbo.cycles.max
+key.o()
+
+isopen("museum")
+
+executesync("sort.config")
+
+gss("</size></size>sorting order:<size=0>","")
+:local int val
+:local int el
+gotoif(tier,gig("color priority")==0)
+loop:val+=1
+find:el=el%9+1
+gotoif(find,gig({codes("priority.".{ele(el)})})!=val)
+gss("</size><color=".{elc(el)}.">".{ele(el)}."</color><size=0>","")
+gotoif(loop,val<9)
+tier:gis("l",0)
+gis("r",0)
+gss("</size><color=white>".if(gig("tier priority")==0,"ignore",if(gig("tier priority")>0,"low to high","high to low"))." tier</color><size=0>","</size>")
+
+gotoif(skipturbo,gig("use turbo v2")<=0)
+executesync("turbo start")
+turbo.cycles.max=max(turbo.cycles.max,turbo.cycles+15000)
+skipturbo:
+
+:global int r
+:local int rt
+init:
+move("equipped",rt,"equipped")
+rt+=1
+r+=if(tier("equipped",r)>=0,1,0)
+gotoif(init,rt-r<=freeSlots("equipped"))
+executesync("quicksort")
+
+executesync(if(gig("use turbo v2")>0,"turbo stop","placeholder for not using turbo exec v2"))
