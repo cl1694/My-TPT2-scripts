@@ -1,0 +1,27 @@
+:name sort.config
+:import sort constant
+
+gotoif(count,gig({counter})==0)
+gis({counter},-1)
+
+waitwhile("<color=red>do not</color> modify the lines above"=="")
+
+gis({codes("priority.fire")},gig({counter}))
+gis({codes("priority.earth")},gig({counter}))
+gis({codes("priority.water")},gig({counter}))
+gis({codes("priority.light")},gig({counter}))
+gis({codes("priority.air")},gig({counter}))
+gis({codes("priority.electricity")},gig({counter}))
+gis({codes("priority.darkness")},gig({counter}))
+gis({codes("priority.nature")},gig({counter}))
+gis({codes("priority.universal")},gig({counter}))
+waitwhile("only <color=red>rearrange</color> the lines above"=="")
+waitwhile("only <color=blue>edit</color> the lines below"=="")
+gis("use turbo v2",1)
+gis("tier priority",1)
+gis("color priority",1)
+gotoif(99,"<color=red>do not</color> modify the lines below"!="")
+
+count:execute("sort.config")
+cnt:gis({counter},gig({counter})+1)
+gotoif(cnt,gig({counter})<9)
