@@ -1,0 +1,37 @@
+:name sort constant
+#counter "<size=0>counter<size=0>"
+#codes(a) "</size>".{a}." <color=white>to</color> line id<size=0>"
+
+#elements "\
+fire--------\
+earth-------\
+water-------\
+light-------\
+air---------\
+electricity-\
+darkness----\
+nature------\
+universal---"
+
+#ele(a) sub({elements},12*({a}- 1),index({elements},"-",12*({a}- 1))- 12*({a}- 1))
+
+#elecolor "\
+red-----\
+#8B4513-\
+blue----\
+#FFFFE0-\
+#00FFFF-\
+yellow--\
+purple--\
+green---\
+black---"
+
+#elc(a) sub({elecolor},8*({a}- 1),index({elecolor},"-",8*({a}- 1))- 8*({a}- 1))
+
+#tierw if(gig("tier priority")==0,0,if(gig("tier priority")>0,1,-1))
+#worthelement(slot) if(gig("color priority")==0,0,gig({codes("priority." . element("equipped",{slot}))}))
+#worthtier(slot) (tier("equipped",{slot}))
+#worth(slot) (\
+{worthelement({slot})}*100+\
+{worthtier({slot})}*{tierw}\
+)
