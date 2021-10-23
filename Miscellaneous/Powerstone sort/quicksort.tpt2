@@ -1,0 +1,37 @@
+:name quicksort
+:import sort constant
+:local int i
+:local int p
+:local int r
+
+
+
+move("equipped",gig("l"),"equipped")
+move("equipped",rnd(gig("l"),gig("r")- 1),"equipped")
+move("combinator",0,"equipped")
+i=gig("l")
+p=gig("l")
+r=gig("r")- 1
+
+
+main:
+loopi:
+i+=1
+gotoif(if(i<r,loopi,end),{worth(gig("l"))}*2-rnd(0,1)<{worth(i)}*2)
+p+=1
+move("equipped",p,"combinator")
+move("equipped",i,"equipped")
+move("combinator",0,"equipped")
+
+gotoif(main,i<r)
+end:
+move("equipped",gig("l"),"combinator")
+move("equipped",p,"equipped")
+move("combinator",0,"equipped")
+
+gis("r",p)
+executesync(if(gig("r")-gig("l")>1,"quicksort","outofsortingbound"))
+gis("l",p+1)
+gis("r",r+1)
+executesync(if(gig("r")-gig("l")>1,"quicksort","outofsortingbound"))
+wait(0.0)
