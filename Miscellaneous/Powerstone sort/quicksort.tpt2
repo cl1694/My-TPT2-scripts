@@ -6,7 +6,7 @@
 
 
 
-move("equipped",gig("l"),"equipped")
+move("equipped",gig("l"),"combinator")
 move("equipped",rnd(gig("l"),gig("r")- 1),"equipped")
 move("combinator",0,"equipped")
 i=gig("l")
