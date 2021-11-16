@@ -19,7 +19,7 @@ gss({display},"working")
 gu("chaos")
 gu("code")
 colonslash:
-gss({display},if(sub(gsg({display}),0,7)!="working",gsg({display}),\
+gss({display},if(sub(gsg({display}),0,7)!="working"||(rnd(0,50)>0),gsg({display}),\
 if(gsg({display})!="working :/","working :/","working :\")))
 ;suggested by d0sboots
 gotoif(colonslash,sub(gsg({display}),0,7)=="working")
