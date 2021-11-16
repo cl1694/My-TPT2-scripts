@@ -18,4 +18,8 @@ end:waituntil(gig("p")>0)
 gss({display},"working")
 gu("chaos")
 gu("code")
-wait(0.0)
+colonslash:
+gss({display},if(sub(gsg({display}),0,7)!="working",gsg({display}),\
+if(gsg({display})!="working :/","working :/","working :\")))
+;suggested by d0sboots
+gotoif(colonslash,sub(gsg({display}),0,7)=="working")
