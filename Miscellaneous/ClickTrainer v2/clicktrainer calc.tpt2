@@ -1,0 +1,60 @@
+:name clicktrainer calc
+:global string screen_type
+:global double x1
+:global double x2
+:global double y1
+:global double y2
+:local double a1for1
+:local double a2for1
+:local double a1for2
+:local double a2for2
+:local double bfor1
+:local double bfor2
+:local double div
+:local double errx
+:local double erry
+
+key.r()
+
+gotoif(skip,sub(impulse(),0,12)=="clicktrainer")
+executesync("clicktrainer v2")
+gss(if(screen_type=="tall","wide","tall") . "screen_result","need more data</color>")
+skip:
+#name(type) gdg(screen_type . "_data_{type}")
+;v1v1|v1x1|v1x2|v1y1|v1y2|x1x1|x1x2|x2x2|x1y1|x2y1|x1y2|x2y2|
+#n {name(v1v1)}
+#sum(name1,name2) ({name({name1}{name2})}-{name(v1{name1})}*{name(v1{name2})}/{n})
+
+#ans screen_type . "screen_result"
+gss({ans},if({n}<3.0,"need more data</color>","calculating</color>"))
+gotoif(99,{n}<3.0)
+
+div={sum(x1,x1)}*{sum(x2,x2)}-{sum(x1,x2)}^2.0
+a1for1=({sum(x2,x2)}*{sum(x1,y1)}-{sum(x1,x2)}*{sum(x2,y1)})/div
+a2for1=({sum(x1,x1)}*{sum(x2,y1)}-{sum(x1,x2)}*{sum(x1,y1)})/div
+a1for2=({sum(x2,x2)}*{sum(x1,y2)}-{sum(x1,x2)}*{sum(x2,y2)})/div
+a2for2=({sum(x1,x1)}*{sum(x2,y2)}-{sum(x1,x2)}*{sum(x1,y2)})/div
+bfor1=({name(v1y1)}-a1for1*{name(v1x1)}-a2for1*{name(v1x2)})/{n}
+bfor2=({name(v1y2)}-a1for2*{name(v1x1)}-a2for2*{name(v1x2)})/{n}
+
+#curx y1
+#cury y2
+#scrx x1
+#scry x2
+#estx errx+{curx}
+#esty erry+{cury}
+#format(a,x) round(({a})*(10.0^{x}))/(10.0^{x})
+errx={format(bfor1+a1for1*{scrx}+a2for1*{scry}-{curx},2)}
+erry={format(bfor2+a1for2*{scrx}+a2for2*{scry}-{cury},2)}
+#green 0.005
+#yellow 0.015
+#absx(x) max(err{x},-1.0*err{x})
+#color(xy) if({absx({xy})}>{yellow}*{scr{xy}},"<#ee0000>",if({absx({xy})}>{green}*{scr{xy}},"<#ffff44>","<#66ff66>"))
+gss({ans},"<br>" . \
+"(click_x, click_y)<sup>T</sup>=<br><#ffff00>" . \
+"(" . {format(bfor1,2)} . ", " . {format(a1for1,4)} . ", " . {format(a2for1,4)} . ")<br>" . \
+"(" . {format(bfor2,2)} . ", " . {format(a1for2,4)} . ", " . {format(a2for2,4)} . ")<br>" . \
+"</color>*(1.0, screen.w, screen.h)<sup>T</sup><br>" . \
+"est=(" . round({estx}) . ", " . round({esty}) . "), cur=(" . {curx} . ", " . {cury} . ")<br>" . \
+"err=(" . {color(x)} . errx . "</color>, " . {color(y)} . erry . "</color>)</color>" \
+)
