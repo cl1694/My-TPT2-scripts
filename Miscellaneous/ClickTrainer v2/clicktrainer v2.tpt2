@@ -1,0 +1,62 @@
+:name clicktrainer v2
+:global string screen_type
+:global double x1
+:global double x2
+:global double y1
+:global double y2
+:global double v1
+
+key.p()
+
+screen_type=if((height.d()/width.d()>9.0/16.0)!=(impulse()=="clicktrainer v2"),"tall","wide")
+gis("<br><size=0><line-height=0>" . screen_type . "hide",0)
+y1=x(position())
+y2=y(position())
+x1=width.d()
+x2=height.d()
+v1=1.0
+
+:local int pos
+;pos/5=0    1    2    3    4    5    6    7    8    9    10   11
+#data "v1v1|v1x1|v1x2|v1y1|v1y2|x1x1|x1x2|x2x2|x1y1|x2y1|x1y2|x2y2|"
+
+#name screen_type . "_data_" . sub({data},pos*5,4)
+#name1 sub({data},pos*5,2)
+#name2 sub({data},pos*5+2,2)
+#clear_mode sub(impulse(),0,12)=="clicktrainer"
+#add_d(name,val) gds({name},if({clear_mode},0.0,gdg({name})+{val}))
+#add_i(name,val) gis({name},if({clear_mode},0,gig({name})+{val}))
+
+loop:
+{add_d({name},gdg({name1})*gdg({name2}))}
+pos=(pos+1)%12
+gotoif(loop,pos>0)
+
+{add_i("</line-height></size><color=white>" . screen_type . "screen_datapoints",1)}
+;only for display
+
+screen_type=if(x2/x1>9.0/16.0,"tall","wide")
+executesync(if(sub(impulse(),0,12)!="clicktrainer","clicktrainer calc",\
+if(impulse()=="clicktrainer calc","clicktrainer v2","N/A")))
+
+;# least square method:
+;y=b+a1*x1+a2*x2
+;b_hat=y_avg-a1_hat*x1_avg+a2_hat*x2_avg
+;in the following formula, 1 means (x1_i-x1_avg), similar for 2 and y
+;a1_hat=(sum(22)sum(1y)-sum(12)sum(2y))/(sum(11)sum(22)-sum(12)sum(12))
+;and a silimar one for a2_hat
+;however, this formula need the average of the data
+;but clicktrainer only get one data once
+;# simplify formula
+;sum((a-a_avg)*sum(b-b_avg))
+;=sum(a*b)-sum(a*b_avg)-sum(a_avg*b)+sum(a_avg*b_avg)
+;=sum(a*b)-sum(a_avg*b_avg)
+;=sum(a*b)-n*a_avg*b_avg
+;=sum(a*b)-sum(a)*sum(b)/n
+;# simplified formula
+;1, 2, y are short of a1_i, a2_i, y_i, and [] is short of sum()
+;a1_hat=([22]-[2][2]/n)*([1y]-[1][y]/n)-([12]-[1][2]/n)*([2y]-[2][y]/n)
+;divided by ([11]-[1][1]/n)*([22]-[2][2]/n)-([12]-[1][2]/n)^2
+;we need to save the value of n, [1], [2], [y], [11], [12], [22], [1y], [2y]
+;we can also use sum(1*y) for sum(y), and sum(1*1) for n
+;then all of them can be handled as sum(val1*val2), so less ternary
