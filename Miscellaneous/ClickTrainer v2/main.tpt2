@@ -1,0 +1,41 @@
+:import macro
+:name {script_name(main)}
+:global double v1
+
+key.p()
+
+mode="simple" ;simple / manual
+screen_type=if((height.d()/width.d()>9.0/16.0)!=(impulse()=="{script_name(main)}"),"tall","wide")
+gis("<br><size=0><line-height=0>" . screen_type . "hide",0)
+y1=x(position())
+y2=y(position())
+x1=width.d()
+x2=height.d()
+mode=if(mode!="manual","simple",mode)
+scale=if(mode=="simple",0.0,ui.size())
+x3=x1*scale
+x4=x2*scale
+v1=1.0
+
+:local int pos
+:local string data
+data=if(mode=="simple","{data(2)}","{data(4)}")
+
+#name screen_type . "_data_" . sub(data,pos*5,4)
+#name1 sub(data,pos*5,2)
+#name2 sub(data,pos*5+2,2)
+#clear_mode sub(impulse(),0,12)=="clicktrainer"
+#add_d(name,val) gds({name},if({clear_mode},0.0,gdg({name})+{val}))
+#add_i(name,val) gis({name},if({clear_mode},0,gig({name})+{val}))
+
+loop:
+{add_d({name},gdg({name1})*gdg({name2}))}
+pos=(pos+1)%if(mode=="simple",{datas(2)},{datas(4)})
+gotoif(loop,pos>0)
+
+{add_i("</line-height></size><color=white>" . screen_type . "screen_datapoints",1)}
+;only for display
+
+screen_type=if(x2/x1>9.0/16.0,"tall","wide")
+executesync(if(sub(impulse(),0,12)!="clicktrainer","{script_name(calc)}",\
+if(impulse()=="{script_name(calc)}","{script_name(main)}","N/A")))

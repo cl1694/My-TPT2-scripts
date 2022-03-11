@@ -1,0 +1,61 @@
+#script_name(name) clicktrainer v2.7:{name}
+
+:global string mode
+:global string screen_type
+:global double x1
+:global double x2
+:global double x3
+:global double x4
+:global double y1
+:global double y2
+:global double scale
+
+{lua(\
+  function generate_data_string(n)\
+    local data="v1v1|v1y1|v1y2|y1y1|y2y2|"\
+    for i=1, n do\
+      data=data.."v1x"..i.."|"\
+      for j=1, n do\
+        data=data.."x"..i.."x"..j.."|"\
+      end\
+      data=data.."x"..i.."y1|x"..i.."y2|"\
+    end\
+    return data\
+  end\
+)}
+
+#data(n) {lua(return generate_data_string({n}))}
+#datas(n) {lua(return 5+3*{n}+{n}*{n})}
+
+#getc(var) gdg(screen_type . "_data_{var}")
+#get(var1,var2) gdg(screen_type . "_data_" . {var1} . {var2})
+#n {get("v1","v1")}
+#cov(var1,var2) ({get({var1},{var2})}-\
+{get("v1",{var1})}*{get("v1",{var2})}/{n})
+
+#det2_data "+01-10"
+#det4_data "{lua(\
+  local result=""\
+  for i=0, 3 do for j=0, 3 do for k=0, 3 do for l=0, 3 do\
+    if i~=j and i~=k and i~=l and j~=k and j~=l and k~=l then\
+      sign=((i<j)~=(i<k)~=(i<l)~=(j<k)~=(j<l)~=(k<l)) and "-" or "+"\
+      result=result..sign..i..j..k..l\
+    end\
+  end end end end\
+  return result\
+)}"
+
+#get_pos(vec1,vec2,x,y) {cov(sub({vec1},{x}*2,2),sub({vec2},{y}*2,2))}
+#get_term(vec1,vec2,d,x) {get_pos({vec1},{vec2},\
+{x},\
+s2i(sub(data,pos*({d}+1)+({x}+1),1),-1))}
+
+#get_next_det_term_2(vec1,vec2) if(sub(data,pos*3,1)=="+",1.0,-1.0)*\
+{get_term({vec1},{vec2},2,0)}*\
+{get_term({vec1},{vec2},2,1)}
+
+#get_next_det_term_4(vec1,vec2) if(sub(data,pos*5,1)=="+",1.0,-1.0)*\
+{get_term({vec1},{vec2},4,0)}*\
+{get_term({vec1},{vec2},4,1)}*\
+{get_term({vec1},{vec2},4,2)}*\
+{get_term({vec1},{vec2},4,3)}

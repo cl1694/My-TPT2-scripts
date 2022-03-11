@@ -1,0 +1,105 @@
+:import macro
+:name {script_name(calc)}
+:local double a1forx
+:local double a2forx
+:local double a3forx
+:local double a4forx
+:local double a1fory
+:local double a2fory
+:local double a3fory
+:local double a4fory
+:local double b_x
+:local double b_y
+:local double det
+:local double esterrx
+:local double esterry
+:local double stderrx
+:local double stderry
+
+key.r()
+
+gotoif(skip,sub(impulse(),0,12)=="clicktrainer")
+executesync("{script_name(main)}")
+gss(if(screen_type=="tall","wide","tall") . "screen_result","<#ee0000>need more data points</color></color>")
+skip:
+
+:local int pos
+:local string data
+data=if(mode=="simple",{det2_data},{det4_data})
+longloop:
+a3forx+=if(mode=="simple",0.0,{get_next_det_term_4("x1x2x3x4","x1x2y1x4")})
+a4forx+=if(mode=="simple",0.0,{get_next_det_term_4("x1x2x3x4","x1x2x3y1")})
+a3fory+=if(mode=="simple",0.0,{get_next_det_term_4("x1x2x3x4","x1x2y2x4")})
+a4fory+=if(mode=="simple",0.0,{get_next_det_term_4("x1x2x3x4","x1x2x3y2")})
+loop:
+det+=if(mode=="simple",{get_next_det_term_2("x1x2","x1x2")},\
+{get_next_det_term_4("x1x2x3x4","x1x2x3x4")})
+a1forx+=if(mode=="simple",{get_next_det_term_2("x1x2","y1x2")},\
+{get_next_det_term_4("x1x2x3x4","y1x2x3x4")})
+a2forx+=if(mode=="simple",{get_next_det_term_2("x1x2","x1y1")},\
+{get_next_det_term_4("x1x2x3x4","x1y1x3x4")})
+a1fory+=if(mode=="simple",{get_next_det_term_2("x1x2","y2x2")},\
+{get_next_det_term_4("x1x2x3x4","y2x2x3x4")})
+a2fory+=if(mode=="simple",{get_next_det_term_2("x1x2","x1y2")},\
+{get_next_det_term_4("x1x2x3x4","x1y2x3x4")})
+
+pos=(pos+1)%if(mode=="simple",2,24)
+gotoif(if(mode=="simple",loop,longloop),pos>0)
+
+#a1_x (a1forx/det)
+#a2_x (a2forx/det)
+#a3_x (a3forx/det)
+#a4_x (a4forx/det)
+#a1_y (a1fory/det)
+#a2_y (a2fory/det)
+#a3_y (a3fory/det)
+#a4_y (a4fory/det)
+
+b_x=({getc(v1y1)}-{a1_x}*{getc(v1x1)}-{a2_x}*{getc(v1x2)}\
+                 -{a3_x}*{getc(v1x3)}-{a4_x}*{getc(v1x4)})/{n}
+b_y=({getc(v1y2)}-{a1_y}*{getc(v1x1)}-{a2_y}*{getc(v1x2)}\
+                 -{a3_y}*{getc(v1x3)}-{a4_y}*{getc(v1x4)})/{n}
+
+
+#result screen_type . "screen_result"
+#curx y1
+#cury y2
+#scrx x1
+#scry x2
+#format(a,x) round(({a})*(10.0^{x}))/(10.0^{x})
+esterrx={format(b_x+{a1_x}*x1+{a2_x}*x2+{a3_x}*x3+{a4_x}*x4-y1,2)}
+esterry={format(b_x+{a1_y}*x1+{a2_y}*x2+{a3_y}*x3+{a4_y}*x4-y2,2)}
+stderrx=(({cov("y1","y1")}-{a1_x}*{cov("x1","y1")}-{a2_x}*{cov("x2","y1")}\
+                          -{a3_x}*{cov("x3","y1")}-{a4_x}*{cov("x4","y1")})\
+                          /({n}-if(mode=="simple",3.0,5.0)))^0.5
+stderry=(({cov("y2","y2")}-{a1_y}*{cov("x1","y2")}-{a2_y}*{cov("x2","y2")}\
+                          -{a3_y}*{cov("x3","y2")}-{a4_y}*{cov("x4","y2")})\
+                          /({n}-if(mode=="simple",3.0,5.0)))^0.5
+
+#green_r 0.005
+#yellow_r 0.015
+#green_c 1.0
+#yellow_c 3.0
+#var(letter) <#ff7f7f>{letter}</color>
+#color(val,green,yellow) if(({val})^2.0>({yellow}),"<#ee0000>",if(({val})^2.0>({green}),"<#ffff44>","<#66ff66>"))
+#colored_est(xy) ({color(esterr{xy},{green_r}*{scr{xy}},{yellow_r}*{scr{xy}})}\
+. {format(esterr{xy},4)} . "</color>")
+#colored_std(xy) ({color(stderr{xy},{green_c},{yellow_c})}\
+. {format(stderr{xy},4)} . "</color>")
+#sign(val) if({val}>=0.0,"+","")
+#coord(xy) {format(b_{xy},4)} . \
+if(mode=="simple",\
+{sign({a1_{xy}})} . {format({a1_{xy}},4)} . "*{var(w)}" . {sign({a2_{xy}})} . {format({a2_{xy}},4)} . "*{var(h)}"\
+,\
+"+<br>(" . {format({a1_{xy}},4)} . {sign({a3_{xy}})} . {format({a3_{xy}},4)} . "{var(u)})*{var(w)}<br>" . \
+     "(" . {format({a2_{xy}},4)} . {sign({a4_{xy}})} . {format({a4_{xy}},4)} . "{var(u)})*{var(h)}"\
+)
+
+
+gss({result},if(det<0.5||det!=det,"<#ee0000>need more data points</color></color>",\
+"<br>vec2(<br>" . {coord(x)} . ",<br>" . {coord(y)} . \
+")<br>esterr=(" . {colored_est(x)} . ", " . {colored_est(y)} . \
+")<br>" . if({n}<if(mode=="simple",4.0,6.0),\
+"<#ee0000>need " . if(mode=="simple",4,6) . " data points for stderr</color>",\
+"stderr=(" . {colored_std(x)} . ", " . {colored_std(y)} . ")</color>"\
+)))
