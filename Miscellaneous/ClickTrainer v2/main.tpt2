@@ -4,15 +4,16 @@
 
 key.p()
 
-mode="simple" ;simple / manual
+mode="simple" ;simple / manual / dynamic
+executesync(if(impulse()!="{script_name(main)}","turbo start","N/A"))
 screen_type=if((height.d()/width.d()>9.0/16.0)!=(impulse()=="{script_name(main)}"),"tall","wide")
 gis("<br><size=0><line-height=0>" . screen_type . "hide",0)
 y1=x(position())
 y2=y(position())
 x1=width.d()
 x2=height.d()
-mode=if(mode!="manual","simple",mode)
-scale=if(mode=="simple",0.0,ui.size())
+mode=if(mode!="manual"&&mode!="dynamic","simple",mode)
+scale=if(mode=="simple",0.0,if(mode=="manual",ui.size(),max(0.5,min(1.0,max(1024.0/x1,576.0/x2)))))
 x3=x1*scale
 x4=x2*scale
 v1=1.0
@@ -39,3 +40,5 @@ gotoif(loop,pos>0)
 screen_type=if(x2/x1>9.0/16.0,"tall","wide")
 executesync(if(sub(impulse(),0,12)!="clicktrainer","{script_name(calc)}",\
 if(impulse()=="{script_name(calc)}","{script_name(main)}","N/A")))
+executesync(if(impulse()!="{script_name(main)}","turbo stop","N/A"))
+wait(0.0)

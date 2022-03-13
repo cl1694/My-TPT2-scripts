@@ -1,4 +1,4 @@
-#script_name(name) clicktrainer v2.7:{name}
+#script_name(name) clicktrainer v2.7.1:{name}
 
 :global string mode
 :global string screen_type

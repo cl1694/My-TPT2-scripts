@@ -67,8 +67,8 @@ b_y=({getc(v1y2)}-{a1_y}*{getc(v1x1)}-{a2_y}*{getc(v1x2)}\
 #scrx x1
 #scry x2
 #format(a,x) round(({a})*(10.0^{x}))/(10.0^{x})
-esterrx={format(b_x+{a1_x}*x1+{a2_x}*x2+{a3_x}*x3+{a4_x}*x4-y1,2)}
-esterry={format(b_x+{a1_y}*x1+{a2_y}*x2+{a3_y}*x3+{a4_y}*x4-y2,2)}
+esterrx=b_x+{a1_x}*x1+{a2_x}*x2+{a3_x}*x3+{a4_x}*x4-y1
+esterry=b_y+{a1_y}*x1+{a2_y}*x2+{a3_y}*x3+{a4_y}*x4-y2
 stderrx=(({cov("y1","y1")}-{a1_x}*{cov("x1","y1")}-{a2_x}*{cov("x2","y1")}\
                           -{a3_x}*{cov("x3","y1")}-{a4_x}*{cov("x4","y1")})\
                           /({n}-if(mode=="simple",3.0,5.0)))^0.5
@@ -81,9 +81,9 @@ stderry=(({cov("y2","y2")}-{a1_y}*{cov("x1","y2")}-{a2_y}*{cov("x2","y2")}\
 #green_c 1.0
 #yellow_c 3.0
 #var(letter) <#ff7f7f>{letter}</color>
-#color(val,green,yellow) if(({val})^2.0>({yellow}),"<#ee0000>",if(({val})^2.0>({green}),"<#ffff44>","<#66ff66>"))
+#color(val,green,yellow) if(({val})^2.0>({yellow})^2.0,"<#ee0000>",if(({val})^2.0>({green})^2.0,"<#ffff44>","<#66ff66>"))
 #colored_est(xy) ({color(esterr{xy},{green_r}*{scr{xy}},{yellow_r}*{scr{xy}})}\
-. {format(esterr{xy},4)} . "</color>")
+. {format(esterr{xy},2)} . "</color>")
 #colored_std(xy) ({color(stderr{xy},{green_c},{yellow_c})}\
 . {format(stderr{xy},4)} . "</color>")
 #sign(val) if({val}>=0.0,"+","")
@@ -100,6 +100,6 @@ gss({result},if(det<0.5||det!=det,"<#ee0000>need more data points</color></color
 "<br>vec2(<br>" . {coord(x)} . ",<br>" . {coord(y)} . \
 ")<br>esterr=(" . {colored_est(x)} . ", " . {colored_est(y)} . \
 ")<br>" . if({n}<if(mode=="simple",4.0,6.0),\
-"<#ee0000>need " . if(mode=="simple",4,6) . " data points for stderr</color>",\
+"need " . if(mode=="simple",4,6) . " points for stderr",\
 "stderr=(" . {colored_std(x)} . ", " . {colored_std(y)} . ")</color>"\
 )))
