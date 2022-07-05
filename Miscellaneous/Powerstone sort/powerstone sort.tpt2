@@ -22,7 +22,7 @@ gis("r",0)
 gss("</size><color=white>".if(gig("tier priority")==0,"ignore",if(gig("tier priority")>0,"low to high","high to low"))." tier</color><size=0>","</size>")
 
 gotoif(skipturbo,gig("use turbo v2")<=0)
-executesync("turbo start")
+executesync("TE2.2:start")
 turbo.cycles.max=max(turbo.cycles.max,turbo.cycles+15000)
 skipturbo:
 
@@ -35,4 +35,4 @@ r+=if(tier("equipped",r)>=0,1,0)
 gotoif(init,rt-r<=freeSlots("equipped"))
 executesync("quicksort")
 
-executesync(if(gig("use turbo v2")>0,"turbo stop","placeholder for not using turbo exec v2"))
+executesync(if(gig("use turbo v2")>0,"TE2.2:stop","placeholder for not using turbo exec v2"))
