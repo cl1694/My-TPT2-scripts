@@ -5,7 +5,7 @@
 key.p()
 
 mode="simple" ;simple / manual / dynamic
-executesync(if(impulse()!="{script_name(main)}","turbo start","N/A"))
+executesync(if(impulse()!="{script_name(main)}","TE2.2:start","N/A"))
 screen_type=if((height.d()/width.d()>9.0/16.0)!=(impulse()=="{script_name(main)}"),"tall","wide")
 gis("<br><size=0><line-height=0>" . screen_type . "hide",0)
 y1=x(position())
@@ -40,5 +40,5 @@ gotoif(loop,pos>0)
 screen_type=if(x2/x1>9.0/16.0,"tall","wide")
 executesync(if(sub(impulse(),0,12)!="clicktrainer","{script_name(calc)}",\
 if(impulse()=="{script_name(calc)}","{script_name(main)}","N/A")))
-executesync(if(impulse()!="{script_name(main)}","turbo stop","N/A"))
+executesync(if(impulse()!="{script_name(main)}","TE2.2:stop","N/A"))
 wait(0.0)
