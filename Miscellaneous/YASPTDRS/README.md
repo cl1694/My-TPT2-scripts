@@ -1,4 +1,6 @@
 # ???
+**NOTE: No longer work well due to game updates.**
+
 **Note:Contains quickly flashing light.**
 
 A script pack that does many *things*.
